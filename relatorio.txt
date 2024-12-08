@@ -1,0 +1,108 @@
+Nome: Sol Castilho Araújo de Moraes Sêda
+Matricula: 1711600
+
+Esse projeto consiste num compilador da linguagem matemágica.
+O conteudo dele é:
+    - compilador.py: Script contendo o compilador do trabalho;
+    - teste[x].py: exemplos utilizados para testar o compilador, o [x] representa o que
+                está sendo testado (imprime, operacao, repeticao, se e senao);
+    - env: pasta contendo o ambiente virtual python com as bibliotecas para o projeto.
+
+Para rodar o projeto:
+    - Tenha o python3 instalado;
+    - Ative o amviente virtual pelo terminal de acordo com seu sistema operacional:
+        - Linux ou MacOs: source env/bin/activate
+        - Windows: .\env\Scripts\activate
+    - Rode pela linha de comando substituindo teste.mag pelo código a ser compilado:
+        - Comando para rodar: python3 compilador.py teste.mag
+            
+Gramatica utilizada:
+programa -> cmds
+cmds -> cmd cmds | cmd
+cmd -> atribuicao | impressao | operacao | repeticao | condicional
+
+atribuicao -> FACA VAR SER NUM PONTO
+impressao -> MOSTRE VAR PONTO | MOSTRE NUM PONTO
+
+operacao -> SOME VAR COM VAR PONTO | SOME VAR COM NUM PONTO | MULTIPLIQUE VAR POR VAR PONTO
+            | MULTIPLIQUE VAR POR NUM PONTO
+
+repeticao → REPITA NUM VEZES DOISPONTOS cmds FIM
+
+condicional → SE NUM ENTAO cmds FIM | SE NUM ENTAO cmds SENAO cmds FIM
+
+A linguagem escolhida para o analisador foi Python utilizando o PLY (Python Lex-Yacc).
+O trabalho foi implementado incrementalmente.
+Comecei fazendo um código que compilava uma atribuição e impressão criando o dicionario
+de palabras reservadas contendo FACA, SER e MOSTRE e gerando o código em python na saida.
+Como foi implementado:
+    A tradução de FACA VAR SER NUM. gera VAR = NUM em python
+    A tradução de MOSTRE VAR. ou MOSTRE NUM. gera print(VAR) ou print(NUM) em python.
+O teste utilizado para isso foi o programa 'exemplo.mag' que se encontra na raiz desse 
+projeto, com conteudo:
+FACA x SER 10.
+MOSTRE x.
+
+O próximo passo foi implementado a operacao de soma, incluindo no dicionario as palavras 
+reservadas SOME e COM.
+Como foi implementado:
+    A tradução de SOME x COM y. gera x + y em python. 
+Para testar isso foi utilizado o programa testeOp.mag que contem:
+x = 10
+y = 5
+x += y
+print(x)
+
+Depois disso foi implemtentada a repeticao, incluindo no dicionario as palavras REPITA,
+VEZES e FIM. Como instrução equivalente para REPITA num VEZES: cmds FIM utilizei 
+    for _ in range[].
+O teste realizado foi o testeRep.mag:
+REPITA 3 VEZES:
+FACA x SER 10.
+MOSTRE x.
+FIM
+
+
+O ponto onde tive mais dificuldade foi na hora de implementar o se-entao e o se-entao-senao,
+quando consegui implementar o se-entao o caso de senao não funcionva e apesar de os métodos
+de debug que coloquei no código mostrarem que estava lendo certo o código não estava sendo 
+gerado.
+No final o  problema foi falta de atenção, em que eu utilizei cmd ao invés de cmds em:
+def p_condicional_senao(regras):
+    '''
+    condicional : SE NUM ENTAO cmds SENAO cmds FIM
+    '''
+Como foi implementada:
+    A tradução de SE NUM ENTAO cmds FIM gera if NUM: cmds em python.
+   A tradução de SE NUM ENTAO cmds SENAO cmds FIM gera if NUM: cmds else: cmds em python.
+Para os testes de se-entao e se-entao-senao fooram utilizados os seguintes programas:
+testeSe.mag:
+x = 10
+if 1:
+    print(x)
+
+testeSenao.mag:
+x = 10
+if 0:
+    print(x)
+    y = 5
+else:
+    print(0)
+    y = 3
+
+A multiplicacao foi implementada com a adição das palavras reservadas MULTIPLIQUE e POR.
+Como foi implementado:
+    A tradução de  MULTIPLIQUE x POR y. gera x * y em python.
+O teste foi feito no arquivo testeMulti.mag:
+FACA x SER 10.
+FACA y SER 5.
+MULTIPLIQUE x POR y.
+MOSTRE x.
+
+Ao final um ultimo teste foi conduzido misturando todos os casos para garantir que eles 
+funcionam em conjunto. 
+Ao fazer esse testes foi constatado que aninhamento não está funcionando corretamente.
+
+Considerações finais:
+O básico da linguagem foi implementado, mas não está suportando atualmente aninhamento,
+ou seja SE dentro de SE e/ou SE-ENTAO-NAO.

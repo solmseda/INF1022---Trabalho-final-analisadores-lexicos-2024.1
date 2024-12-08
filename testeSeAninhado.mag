@@ -1,0 +1,9 @@
+FACA x SER 10.
+FACA y SER 5.
+
+SE x ENTAO
+    MOSTRE x.
+    SE y ENTAO
+        MOSTRE y.
+    FIM
+FIM
